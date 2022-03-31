@@ -3,6 +3,8 @@ package kz.argynss.catchthedrop;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class GameWindow extends JFrame {
@@ -15,6 +17,7 @@ public class GameWindow extends JFrame {
     private static float dropLeft = 200;
     private static float dropTop = -100;
     private static float dropV = 200;
+    private static int score;
 
 
     public static void main(String[] args) throws IOException {
@@ -29,6 +32,23 @@ public class GameWindow extends JFrame {
         gameWindow.setResizable(false);
         lastFrameTime = System.nanoTime();
         GameField gameField = new GameField();
+        gameField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                float drop_right = dropLeft + drop.getWidth(null);
+                float drop_bottom = dropTop + drop.getHeight(null);
+                boolean is_drop = x >= dropLeft && x <= drop_right && y >= dropTop && y <= drop_bottom;
+                if(is_drop) {
+                    dropTop = -100;
+                    dropLeft = (int) (Math.random() * (gameField.getWidth() - drop.getWidth(null)));
+                    dropV = dropV + 20;
+                    score++;
+                    gameWindow.setTitle("Score: " + score);
+                }
+            }
+        });
         gameWindow.add(gameField);
         gameWindow.setVisible(true);
     }
@@ -40,7 +60,7 @@ public class GameWindow extends JFrame {
         dropTop = dropTop + dropV * deltaTime;
         g.drawImage(background,0,0,null);
         g.drawImage(drop, (int) dropLeft, (int) dropTop, null);
-       // g.drawImage(gameOver,280,120,null);
+        if (dropTop > gameWindow.getHeight()) g.drawImage(gameOver, 280, 120, null);
 
     }
 
