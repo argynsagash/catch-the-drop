@@ -1,4 +1,4 @@
-package kz.argynss.catchthedrop;
+package kz.argynsagash.catchthedrop;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
